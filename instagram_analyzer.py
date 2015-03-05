@@ -26,12 +26,12 @@ session_opts = {
 CONFIG_INSTAGRAM = {
     'client_id': secret.INSTAGRAM_CLIENT_ID,
     'client_secret': secret.INSTAGRAM_CLIENT_SECRET,
-    'redirect_uri': 'http://local.dev.com/oauth_instagram_callback',
+    'redirect_uri': 'http://104.236.202.250/oauth_instagram_callback',
 }
 CONFIG_TWITTER = {
     'consumer_id': secret.TWITTER_CONSUMER_ID,
     'consumer_secret': secret.TWITTER_CONSUMER_SECRET,
-    'redirect_uri': 'http://local.dev.com/oauth_twitter_callback',
+    'redirect_uri': 'http://104.236.202.250/oauth_twitter_callback',
     'client_id': secret.TWITTER_CLIENT_ID,
     'client_secret': secret.TWITTER_CLIENT_SECRET
 }
@@ -42,7 +42,7 @@ auth_twitter = tweepy.auth.OAuthHandler(CONFIG_TWITTER['consumer_id'], CONFIG_TW
 auth_twitter.secure = True
 
 # Config Server
-URL = 'http://local.dev.com/'
+URL = 'http://104.236.202.250/'
 app = Flask(__name__)  
 
 
@@ -347,5 +347,4 @@ def on_recent():
 if __name__ == '__main__':
     app.wsgi_app = SessionMiddleware(app.wsgi_app, session_opts)
     app.secret_key = secret.APP_SECRET_KEY
-    # bottle.run(app=app, host='localhost', port=8515, reloader=False)
-    app.run(debug=True, host='localhost', port=8515)
+    app.run(debug=True, host=104.236.202.250)
