@@ -45,6 +45,8 @@ auth_twitter.secure = True
 
 # Config Server
 app = Flask(__name__)  
+app.secret_key = secret.APP_SECRET_KEY
+
 
 
 # @app.before_request
@@ -159,5 +161,4 @@ def on_recent():
 
 if __name__ == '__main__':
     # app.wsgi_app = SessionMiddleware(app.wsgi_app, session_opts)
-    app.secret_key = secret.APP_SECRET_KEY
     app.run(debug=True, host='localhost', port=8080)
