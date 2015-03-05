@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+   <meta charset="utf-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <title>Third-party Authentication Tutorial</title>
+
+   <!-- Bootstrap -->
+   <!-- <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+   <link href="/static/css/bootstrap-theme.min.css" rel="stylesheet">
+   <link href="/static/css/estilos.css" rel="stylesheet"> -->
+   <style type="text/css">
+
+.node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+.link {
+  stroke: #999;
+  stroke-opacity: .6;
+}
+
+.word {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 300;
+  line-height: 15px;
+}
+
+
+ 
+
+  </style>
+  <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js?1.29.1"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <script type="text/javascript">
+/* (c) Michiel van der Blonk
+ * a model of basic phycics quantities
+ * July 2012
+ * some code adapted from http://bl.ocks.org/1153292
+ */
+ function draw(){
+  /*
+    nodes=[
+    {"name":"Myriel","group":1, rad:5},
+    {"name":"Napoleon","group":2, rad:10},
+    {"name":"Mlle.Baptistine","group":3, rad:5},  
+    {"name":"Mlle.Baptistine","group":4, rad:5},
+    {"name":"Mlle.Baptistine","group":5, rad:5}
+  ],*/
+
+  nodes = 
+[
+        {
+            "group": 0,
+            "image_url": "http://pbs.twimg.com/profile_images/1775096406/Foto_normal.JPG",
+            "name": "HoffmanOliver",
+            "rad": 10,
+            "type": "grav"
+        },
+        {
+            "group": 1,
+            "image_url": "http://s3-eu-west-1.amazonaws.com/petrus-blog/placeholder.png",
+            "name": "va",
+            "rad": 8,
+            "type": "grav"
+        },
+        {
+            "group": 2,
+            "image_url": "http://s3-eu-west-1.amazonaws.com/petrus-blog/placeholder.png",
+            "name": "est",
+            "rad": 7,
+            "type": "grav"
+        },
+        {
+            "group": 3,
+            "image_url": "http://s3-eu-west-1.amazonaws.com/petrus-blog/placeholder.png",
+            "name": "ser",
+            "rad": 7,
+            "type": "grav"
+        },
+        {
+            "group": 4,
+            "image_url": "http://s3-eu-west-1.amazonaws.com/petrus-blog/placeholder.png",
+            "name": "sociedad",
+            "rad": 7,
+            "type": "grav"
+        },
+        {
+            "group": 5,
+            "image_url": "http://s3-eu-west-1.amazonaws.com/petrus-blog/placeholder.png",
+            "name": "gracias",
+            "rad": 7,
+            "type": "grav"
+        },
+        {
+            "group": 6,
+            "image_url": "http://s3-eu-west-1.amazonaws.com/petrus-blog/placeholder.png",
+            "name": "via",
+            "rad": 7,
+            "type": "grav"
+        },
+        {
+            "group": 7,
+            "image_url": "http://s3-eu-west-1.amazonaws.com/petrus-blog/placeholder.png",
+            "name": "pa",
+            "rad": 7,
+            "type": "grav"
+        },
+        {
+            "group": 8,
+            "image_url": "http://s3-eu-west-1.amazonaws.com/petrus-blog/placeholder.png",
+            "name": "sido",
+            "rad": 7,
+            "type": "grav"
+        },
+        {
+            "group": 9,
+            "image_url": "http://s3-eu-west-1.amazonaws.com/petrus-blog/placeholder.png",
+            "name": "acento",
+            "rad": 7,
+            "type": "grav"
+        },
+        {
+            "group": 10,
+            "image_url": "http://s3-eu-west-1.amazonaws.com/petrus-blog/placeholder.png",
+            "name": "mundo",
+            "rad": 7,
+            "type": "grav"
+        },
+        {
+            "group": 11,
+            "image_url": "http://s3-eu-west-1.amazonaws.com/petrus-blog/placeholder.png",
+            "name": "experiencia",
+            "rad": 7,
+            "type": "grav"
+        },
+        {
+            "group": 12,
+            "image_url": "http://s3-eu-west-1.amazonaws.com/petrus-blog/placeholder.png",
+            "name": "r",
+            "rad": 10,
+            "type": "grav"
+        },
+        {
+            "group": 13,
+            "image_url": "http://s3-eu-west-1.amazonaws.com/petrus-blog/placeholder.png",
+            "name": "time",
+            "rad": 7,
+            "type": "grav"
+        },
+        {
+            "group": 14,
+            "image_url": "http://s3-eu-west-1.amazonaws.com/petrus-blog/placeholder.png",
+            "name": "mejor",
+            "rad": 7,
+            "type": "grav"
+        },
+        {
+            "group": 15,
+            "image_url": "http://s3-eu-west-1.amazonaws.com/petrus-blog/placeholder.png",
+            "name": "creo",
+            "rad": 7,
+            "type": "grav"
+        },
+        {
+            "group": 16,
+            "image_url": "http://s3-eu-west-1.amazonaws.com/petrus-blog/placeholder.png",
+            "name": "amigos",
+            "rad": 7,
+            "type": "grav"
+        },
+        {
+            "group": 17,
+            "image_url": "http://s3-eu-west-1.amazonaws.com/petrus-blog/placeholder.png",
+            "name": "cerca",
+            "rad": 7,
+            "type": "grav"
+        },
+        {
+            "group": 18,
+            "image_url": "http://s3-eu-west-1.amazonaws.com/petrus-blog/placeholder.png",
+            "name": "principal",
+            "rad": 7,
+            "type": "grav"
+        },
+        {
+            "group": 3,
+            "image_url": "http://pbs.twimg.com/profile_images/1226173815/angus_young_normal.jpg",
+            "name": "acp_89",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 10,
+            "image_url": "http://pbs.twimg.com/profile_images/443681673377357824/p5RMu4FO_normal.png",
+            "name": "RandomRoute1",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 12,
+            "image_url": "http://pbs.twimg.com/profile_images/1816321636/yo_normal.jpg",
+            "name": "rdCarlos",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 12,
+            "image_url": "http://pbs.twimg.com/profile_images/378800000646304328/3e1a3a999449a6456c2d8c76b7da16a4_normal.jpeg",
+            "name": "arctarus",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 14,
+            "image_url": "http://pbs.twimg.com/profile_images/378800000246965468/c37d22132d700f774af0f01868c9755c_normal.jpeg",
+            "name": "JorgeRamos31",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 2,
+            "image_url": "http://pbs.twimg.com/profile_images/458866692387385344/D_a0oOw-_normal.jpeg",
+            "name": "ufvmadrid",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 18,
+            "image_url": "http://pbs.twimg.com/profile_images/2283472576/images_normal.jpg",
+            "name": "SenorX__",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 12,
+            "image_url": "http://pbs.twimg.com/profile_images/1337663566/Gintoki_Jorge_2_normal.jpg",
+            "name": "Jorge_LopezP",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 10,
+            "image_url": "http://pbs.twimg.com/profile_images/420704900721676288/wUMLoZga_normal.jpeg",
+            "name": "Paulacasitos",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 10,
+            "image_url": "http://pbs.twimg.com/profile_images/546632390316421121/K8iUW9X6_normal.jpeg",
+            "name": "msenmar",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 1,
+            "image_url": "http://pbs.twimg.com/profile_images/472044190889553920/4epMzYn1_normal.jpeg",
+            "name": "martini_s1",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 12,
+            "image_url": "http://pbs.twimg.com/profile_images/530625656053567488/9LXoSbNU_normal.jpeg",
+            "name": "rrppAlbertoVips",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 1,
+            "image_url": "http://pbs.twimg.com/profile_images/378800000679651220/110ee19a402a85f5e411c3ec6a606488_normal.jpeg",
+            "name": "JorgeWhyte",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 12,
+            "image_url": "http://pbs.twimg.com/profile_images/532675455913324544/-yJ1hSlT_normal.jpeg",
+            "name": "InmaNacher",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 15,
+            "image_url": "http://pbs.twimg.com/profile_images/1817106776/pollito-y-huevo_normal.jpg",
+            "name": "Helen_ch01",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 2,
+            "image_url": "http://pbs.twimg.com/profile_images/2711723035/597c1dcd4f0596bc4475841f90cbbda4_normal.jpeg",
+            "name": "AlexCubasj",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 1,
+            "image_url": "http://pbs.twimg.com/profile_images/2603869442/image_normal.jpg",
+            "name": "mariastrana",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 15,
+            "image_url": "http://pbs.twimg.com/profile_images/455645232562835456/FrRCZpr1_normal.jpeg",
+            "name": "manudb",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 14,
+            "image_url": "http://pbs.twimg.com/profile_images/450998525040402432/Qgew8K-7_normal.jpeg",
+            "name": "ferkui",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 3,
+            "image_url": "http://pbs.twimg.com/profile_images/1290650952/EQif6wexyaK3e-L1fs3d.0_normal.jpg",
+            "name": "EstefaniaFMG",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 12,
+            "image_url": "http://pbs.twimg.com/profile_images/1839018112/IMG_4020_1_normal.PNG",
+            "name": "pedro_gray",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 9,
+            "image_url": "http://pbs.twimg.com/profile_images/378800000671520504/0f193a97d78f81fc255b27f906f00951_normal.jpeg",
+            "name": "maxtrujilloTJ",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 1,
+            "image_url": "http://pbs.twimg.com/profile_images/478317014487138306/y--HF7uB_normal.jpeg",
+            "name": "jamual",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 12,
+            "image_url": "http://pbs.twimg.com/profile_images/519597365347373057/udm1cXBW_normal.jpeg",
+            "name": "PaulaGautier",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 6,
+            "image_url": "http://pbs.twimg.com/profile_images/560579287200591872/ZROihOuO_normal.jpeg",
+            "name": "mariabdlh",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 12,
+            "image_url": "http://pbs.twimg.com/profile_images/1498311674/Foto_del_d_a_06-06-2011_a_la_s__2043__51_normal.jpg",
+            "name": "AlbertoBelda",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 6,
+            "image_url": "http://pbs.twimg.com/profile_images/1123666370/white_normal.jpg",
+            "name": "DeltaAssist",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 1,
+            "image_url": "http://pbs.twimg.com/profile_images/2605171403/391198_108274802651250_468811927_n_normal.jpg",
+            "name": "TitoAlonso6",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 1,
+            "image_url": "http://pbs.twimg.com/profile_images/525613115606843394/5no43gw0_normal.jpeg",
+            "name": "ufvenfurecida",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 11,
+            "image_url": "http://pbs.twimg.com/profile_images/2869883076/f3bbcf5207353cfd170168038682076b_normal.jpeg",
+            "name": "Soc_Alumnos_UFV",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 7,
+            "image_url": "http://pbs.twimg.com/profile_images/473615474853302272/jNfFEGPq_normal.jpeg",
+            "name": "eLeussina",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 12,
+            "image_url": "http://pbs.twimg.com/profile_images/550971348043198465/WoENNzo2_normal.jpeg",
+            "name": "irenepg_22",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 1,
+            "image_url": "http://pbs.twimg.com/profile_images/448432053986410496/PEL7pmFM_normal.jpeg",
+            "name": "MiryGc",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 8,
+            "image_url": "http://pbs.twimg.com/profile_images/528528515701161984/E70VX5Vl_normal.jpeg",
+            "name": "tonoplaza5",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 5,
+            "image_url": "http://pbs.twimg.com/profile_images/2430044420/dcPY4lFN_normal",
+            "name": "ChinchoStark",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 13,
+            "image_url": "http://pbs.twimg.com/profile_images/2431516242/c98y3ojrwhwigabvibrq_normal.jpeg",
+            "name": "bynoeliaa",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 11,
+            "image_url": "http://pbs.twimg.com/profile_images/1732155375/perfil_tw_normal.JPG",
+            "name": "Pyrodosruedas",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 1,
+            "image_url": "http://pbs.twimg.com/profile_images/1393118972/IMG00030-20101003-0956_normal.jpg",
+            "name": "BlancheGJ",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 12,
+            "image_url": "http://pbs.twimg.com/profile_images/462527556936138752/7tDsK7c7_normal.jpeg",
+            "name": "csneira",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 12,
+            "image_url": "http://pbs.twimg.com/profile_images/2526196145/kxbp7g1N_normal",
+            "name": "borjasalvador",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 16,
+            "image_url": "http://pbs.twimg.com/profile_images/3311618575/b1c53e73286bae986611436bad3988c2_normal.jpeg",
+            "name": "EduLobo13",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 4,
+            "image_url": "http://pbs.twimg.com/profile_images/1265711242/bM3wTaUlhl431zNjfZ1Z_normal.jpg",
+            "name": "CitizenAlvaro",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 12,
+            "image_url": "http://pbs.twimg.com/profile_images/378800000564312274/0761baf132624f5bf270cd3f66dd7322_normal.jpeg",
+            "name": "belenxiu92",
+            "rad": 3,
+            "type": "grav"
+        },
+        {
+            "group": 17,
+            "image_url": "http://pbs.twimg.com/profile_images/2289314747/nj329l6cukj9s7wheq3h_normal.jpeg",
+            "name": "Tritzeta",
+            "rad": 3,
+            "type": "grav"
+        }
+    ],
+
+    // the relations shown can be calculated using
+    // formulas from either 1 or 2 other quantities
+    /*
+    links = [{'word': 'muchas', 'target': 1, 'length': 300, 'value': 'visible', 'source': 0, 'stroke': 1}, {'word': 'mejor', 'target': 2, 'length': 271, 'value': 'visible', 'source': 0, 'stroke': 4}, {'word': 'mejor', 'target': 3, 'length': 271, 'value': 'visible', 'source': 0, 'stroke': 4}, {'word': 'haciendo', 'target': 4, 'length': 300, 'value': 'visible', 'source': 0, 'stroke': 2}, {'word': 'mejor', 'target': 5, 'length': 236, 'value': 'visible', 'source': 0, 'stroke': 4}, {'word': 'l', 'target': 6, 'length': 151, 'value': 'visible', 'source': 0, 'stroke': 3}, {'word': 'l', 'target': 7, 'length': 151, 'value': 'visible', 'source': 0, 'stroke': 3}, {'word': 'mejor', 'target': 8, 'length': 236, 'value': 'visible', 'source': 0, 'stroke': 4}, {'word': 'mejor', 'target': 9, 'length': 236, 'value': 'visible', 'source': 0, 'stroke': 4}, {'word': 'mejor', 'target': 10, 'length': 236, 'value': 'visible', 'source': 0, 'stroke': 4}, {'word': 'va', 'target': 11, 'length': 172, 'value': 'visible', 'source': 0, 'stroke': 2}, {'word': 'mejor', 'target': 12, 'length': 236, 'value': 'visible', 'source': 0, 'stroke': 4}, {'word': 'entrevista', 'target': 13, 'length': 300, 'value': 'visible', 'source': 0, 'stroke': 1}, {'word': 'l', 'target': 14, 'length': 147, 'value': 'visible', 'source': 0, 'stroke': 2}, {'word': 'quieres', 'target': 15, 'length': 249, 'value': 'visible', 'source': 0, 'stroke': 1}, {'word': 'lomejordefb', 'target': 16, 'length': 300, 'value': 'visible', 'source': 0, 'stroke': 2}, {'word': 'aqu', 'target': 17, 'length': 176, 'value': 'visible', 'source': 0, 'stroke': 1}, {'word': 'mejor', 'target': 18, 'length': 207, 'value': 'visible', 'source': 0, 'stroke': 4}, {'word': 'mejor', 'target': 19, 'length': 207, 'value': 'visible', 'source': 0, 'stroke': 4}, {'word': 'mejor', 'target': 20, 'length': 207, 'value': 'visible', 'source': 0, 'stroke': 4}, {'word': 'mejor', 'target': 21, 'length': 207, 'value': 'visible', 'source': 0, 'stroke': 4}, {'word': 'mejor', 'target': 22, 'length': 207, 'value': 'visible', 'source': 0, 'stroke': 4}, {'word': 'mejor', 'target': 23, 'length': 207, 'value': 'visible', 'source': 0, 'stroke': 4}];*/
+    /*
+    links=[
+    {"source":1,"target":2,"stroke":1, "length":200, "value":"visible"},
+    {"source":1,"target":3,"stroke":8, "length":150, "value":"visible"},
+    {"source":1,"target":0,"stroke":1, "length":150, "value":"visible"},
+    {"source":1,"target":4,"stroke":1, "length":150, "value":"visible"},
+
+
+
+    {"source":2,"target":3,"stroke":1, "length":100, "value":""},
+    {"source":2,"target":4,"stroke":1, "length":100, "value":""},
+    {"source":2,"target":0,"stroke":1, "length":100, "value":""},
+
+    {"source":3,"target":0,"stroke":1, "length":100, "value":""},
+    {"source":3,"target":4,"stroke":1, "length":100, "value":""},
+
+    {"source":0,"target":3,"stroke":1, "length":1000, "value":""},
+    {"source":0,"target":2,"stroke":1, "length":100, "value":""},
+    {"source":0,"target":4,"stroke":1, "length":100, "value":""}
+ 
+  ];
+*/
+
+links = 
+[
+        {
+            "length": 350,
+            "source": 0,
+            "stroke": 2,
+            "target": 1,
+            "value": "visible",
+            "word": "va"
+        },
+        {
+            "length": 350,
+            "source": 0,
+            "stroke": 2,
+            "target": 2,
+            "value": "visible",
+            "word": "est"
+        },
+        {
+            "length": 350,
+            "source": 0,
+            "stroke": 2,
+            "target": 3,
+            "value": "visible",
+            "word": "ser"
+        },
+        {
+            "length": 350,
+            "source": 0,
+            "stroke": 2,
+            "target": 4,
+            "value": "visible",
+            "word": "sociedad"
+        },
+        {
+            "length": 350,
+            "source": 0,
+            "stroke": 2,
+            "target": 5,
+            "value": "visible",
+            "word": "gracias"
+        },
+        {
+            "length": 350,
+            "source": 0,
+            "stroke": 2,
+            "target": 6,
+            "value": "visible",
+            "word": "via"
+        },
+        {
+            "length": 350,
+            "source": 0,
+            "stroke": 2,
+            "target": 7,
+            "value": "visible",
+            "word": "pa"
+        },
+        {
+            "length": 350,
+            "source": 0,
+            "stroke": 2,
+            "target": 8,
+            "value": "visible",
+            "word": "sido"
+        },
+        {
+            "length": 350,
+            "source": 0,
+            "stroke": 2,
+            "target": 9,
+            "value": "visible",
+            "word": "acento"
+        },
+        {
+            "length": 350,
+            "source": 0,
+            "stroke": 2,
+            "target": 10,
+            "value": "visible",
+            "word": "mundo"
+        },
+        {
+            "length": 350,
+            "source": 0,
+            "stroke": 2,
+            "target": 11,
+            "value": "visible",
+            "word": "experiencia"
+        },
+        {
+            "length": 350,
+            "source": 0,
+            "stroke": 2,
+            "target": 12,
+            "value": "visible",
+            "word": "r"
+        },
+        {
+            "length": 350,
+            "source": 0,
+            "stroke": 2,
+            "target": 13,
+            "value": "visible",
+            "word": "time"
+        },
+        {
+            "length": 350,
+            "source": 0,
+            "stroke": 2,
+            "target": 14,
+            "value": "visible",
+            "word": "mejor"
+        },
+        {
+            "length": 350,
+            "source": 0,
+            "stroke": 2,
+            "target": 15,
+            "value": "visible",
+            "word": "creo"
+        },
+        {
+            "length": 350,
+            "source": 0,
+            "stroke": 2,
+            "target": 16,
+            "value": "visible",
+            "word": "amigos"
+        },
+        {
+            "length": 350,
+            "source": 0,
+            "stroke": 2,
+            "target": 17,
+            "value": "visible",
+            "word": "cerca"
+        },
+        {
+            "length": 350,
+            "source": 0,
+            "stroke": 2,
+            "target": 18,
+            "value": "visible",
+            "word": "principal"
+        },
+        {
+            "length": 50,
+            "source": 19,
+            "stroke": 2,
+            "target": 3,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 20,
+            "stroke": 2,
+            "target": 10,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 21,
+            "stroke": 2,
+            "target": 12,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 22,
+            "stroke": 2,
+            "target": 12,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 23,
+            "stroke": 2,
+            "target": 14,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 24,
+            "stroke": 2,
+            "target": 2,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 25,
+            "stroke": 2,
+            "target": 18,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 26,
+            "stroke": 2,
+            "target": 12,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 27,
+            "stroke": 2,
+            "target": 10,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 28,
+            "stroke": 2,
+            "target": 10,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 29,
+            "stroke": 2,
+            "target": 1,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 30,
+            "stroke": 2,
+            "target": 12,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 31,
+            "stroke": 2,
+            "target": 1,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 32,
+            "stroke": 2,
+            "target": 12,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 33,
+            "stroke": 2,
+            "target": 15,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 34,
+            "stroke": 2,
+            "target": 2,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 35,
+            "stroke": 2,
+            "target": 1,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 36,
+            "stroke": 2,
+            "target": 15,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 37,
+            "stroke": 2,
+            "target": 14,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 38,
+            "stroke": 2,
+            "target": 3,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 39,
+            "stroke": 2,
+            "target": 12,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 40,
+            "stroke": 2,
+            "target": 9,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 41,
+            "stroke": 2,
+            "target": 1,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 42,
+            "stroke": 2,
+            "target": 12,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 43,
+            "stroke": 2,
+            "target": 6,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 44,
+            "stroke": 2,
+            "target": 12,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 45,
+            "stroke": 2,
+            "target": 6,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 46,
+            "stroke": 2,
+            "target": 1,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 47,
+            "stroke": 2,
+            "target": 1,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 48,
+            "stroke": 2,
+            "target": 11,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 49,
+            "stroke": 2,
+            "target": 7,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 50,
+            "stroke": 2,
+            "target": 12,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 51,
+            "stroke": 2,
+            "target": 1,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 52,
+            "stroke": 2,
+            "target": 8,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 53,
+            "stroke": 2,
+            "target": 5,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 54,
+            "stroke": 2,
+            "target": 13,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 55,
+            "stroke": 2,
+            "target": 11,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 56,
+            "stroke": 2,
+            "target": 1,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 57,
+            "stroke": 2,
+            "target": 12,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 58,
+            "stroke": 2,
+            "target": 12,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 59,
+            "stroke": 2,
+            "target": 16,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 60,
+            "stroke": 2,
+            "target": 4,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 61,
+            "stroke": 2,
+            "target": 12,
+            "value": "visible",
+            "word": ""
+        },
+        {
+            "length": 50,
+            "source": 62,
+            "stroke": 2,
+            "target": 17,
+            "value": "visible",
+            "word": ""
+        }
+    ];
+
+var width = window.innerWidth
+|| document.documentElement.clientWidth
+|| document.body.clientWidth;
+
+var height = window.innerHeight
+|| document.documentElement.clientHeight
+|| document.body.clientHeight;
+
+// var width = 960,
+//     height = 700,
+   var gravity = 0.1,
+  
+              distance = 50,
+              charge = 100, //-200,
+              fill = d3.scale.category10();
+
+var color = d3.scale.category20();
+
+var force = d3.layout.force()
+    .charge(0)
+    // .charge(function(d) {
+    // if (d.name != 'HoffmanOliver')
+    //   {
+    //     return -150;
+    //   }
+    //   else if(d.type == 'grav')
+    //     return 100;
+      
+    // })
+    .linkDistance(130)
+    .gravity(gravity)
+                  .distance(distance)
+    .size([width, height]);
+
+// var force = d3.layout.force()
+//     .nodes(nodes)
+//     .links(links)
+//     .size([width, height])
+//     .linkStrength(1)
+//     .friction(0.5)
+//     .linkDistance(200)
+//     .charge(-30)
+//     .gravity(0.1)
+//     .theta(0.8)
+//     .alpha(0.1);
+   //.start();
+
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+  // force
+  //     .nodes(nodes)
+  //     .links(links)
+  //     .linkDistance(function(d) {return d.length;})
+  //     .start();
+
+    var force = self.force = d3.layout.force()
+        .nodes(nodes)
+        .links(links)
+       // .linkDistance(function(d) {return d.length;})
+        .linkDistance(function(d) {
+            if(d.word != '')
+                return width/5;
+            else
+                return 50;
+
+        })
+        .charge(-900)
+        .size([width, height])
+        .start();
+
+  var link = svg.selectAll(".link")
+  .data(links)
+  .enter()
+  .append("g")
+  .attr("class", "link-group")
+  .append("line")
+  .attr("class", function(d) { return d.value == "visible" ? "link" : ""; })
+  .style("stroke-width", function(d) { return Math.sqrt(d.stroke); });
+
+  // link.append("svg:title").text(function(d) { return "Unit: " +  ", Formula: ";});
+
+var linkText = svg.selectAll(".link-group")
+  .append("text")
+  .attr("class", "word")
+  .data(force.links())
+  .text(function(d) { return d.value == "visible" ? d.word : ""; })
+  .attr("x", function(d) { return (d.source.x + (d.target.x - d.source.x) * 0.5); })
+  .attr("y", function(d) { return (d.source.y + (d.target.y - d.source.y) * 0.5); })
+  .attr("dy", ".25em")
+  .attr("text-anchor", "middle");
+
+  // var node = svg.selectAll(".node")
+  //     .data(nodes)
+  //   .enter().append("circle")
+  //     .attr("class", "node")
+  // .attr("r", function(d){return d.rad*2;})
+  //     .style("fill", function(d) { return color(d.group); })
+  //     .call(force.drag);
+
+
+
+var node = svg.selectAll(".node")
+      .data(nodes)
+    .enter().append("circle")
+    .attr("r", 20)
+    .attr("cy", 0)
+    .attr("cx", 0)
+    .attr("fill", function(d){
+
+      var defs = svg.append("defs").attr("id", "imgdefs")
+      var temp_pat = defs.append("pattern")
+                        .attr("id", d.name)
+                        .attr("height", 1)
+                        .attr("width", 1)
+                        .attr("x", "0")
+                        .attr("y", "0")
+     .append("image")
+     .attr("x", 0)
+     .attr("y", 0)
+     .attr("height", 40)
+     .attr("width", 40  )
+     .attr("xlink:href", d.image_url)
+
+     return "url(#"+d.name+")"
+
+    }).call(force.drag);
+    // .attr("fill", "url(#catpattern)").call(force.drag);
+
+
+var imgurl = "https://pbs.twimg.com/profile_images/1775096406/Foto.JPG"
+
+
+
+// var defs = svg.append("defs").attr("id", "imgdefs")
+
+// var catpattern = defs.append("pattern")
+//                         .attr("id", "catpattern")
+//                         .attr("height", 1)
+//                         .attr("width", 1)
+//                         .attr("x", "0")
+//                         .attr("y", "0")
+
+// catpattern.append("image")
+//      .attr("x", 0)
+//      .attr("y", 0)
+//      .attr("height", 40)
+//      .attr("width", 40  )
+//      .attr("xlink:href", imgurl)
+
+ // var node = svg.selectAll(".node")
+ //      .data(nodes).enter().append("image")
+ //      .attr("xlink:href", "https://pbs.twimg.com/profile_images/1775096406/Foto.JPG")
+ //      .attr("width", 50)
+ //      .attr("height", 50).call(force.drag);
+
+  //   .enter().append("circle")
+  //     .attr("class", "node")
+  // .attr("r", function(d){return d.rad*2;})
+  //     .style("fill", function(d) { return color(d.group); })
+  //     .call(force.drag);
+
+  node.append("title")
+      .text(function(d) { return d.name; });
+
+  
+force.on("tick", function() {
+
+
+  link
+    .attr("x1", function(d) { return d.source.x; })
+    .attr("y1", function(d) { return d.source.y; })
+    .attr("x2", function(d) { return d.target.x; })
+    .attr("y2", function(d) { return d.target.y; });
+
+  node
+    .attr("cx", function(d) { return d.x; })
+    .attr("cy", function(d) { return d.y; });
+
+     var k = .01;
+       nodes[0].y += (height/2 - nodes[0].y) * k;
+       nodes[0].x += (width/2 - nodes[0].x) * k;
+
+  linkText
+    .attr("x", function(d) { return (d.source.x +10+ (d.target.x - d.source.x) * 0.5); })
+    .attr("y", function(d) { return (d.source.y +10 + (d.target.y - d.source.y) * 0.5); });
+});
+
+
+}
+
+ $( document ).ready(function() {
+    draw();
+  });
+
+ </script>
+   
+ </head>
+ <body>
+
+
+ </body>
+</html>
