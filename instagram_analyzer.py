@@ -15,6 +15,7 @@ import secret as secret
 # from beaker.middleware import SessionMiddleware
 from flask import Flask, send_file, redirect, request, session
 
+URL = 'http://104.236.202.250/'
 
 session_opts = {
     'session.type': 'ext:memcached',
@@ -26,12 +27,12 @@ session_opts = {
 CONFIG_INSTAGRAM = {
     'client_id': secret.INSTAGRAM_CLIENT_ID,
     'client_secret': secret.INSTAGRAM_CLIENT_SECRET,
-    'redirect_uri': 'http://localhost:5000/oauth_instagram_callback',
+    'redirect_uri': URL+'/oauth_instagram_callback',
 }
 CONFIG_TWITTER = {
     'consumer_id': secret.TWITTER_CONSUMER_ID,
     'consumer_secret': secret.TWITTER_CONSUMER_SECRET,
-    'redirect_uri': 'http://localhost:5000/oauth_twitter_callback',
+    'redirect_uri': URL+'/oauth_twitter_callback',
     'client_id': secret.TWITTER_CLIENT_ID,
     'client_secret': secret.TWITTER_CLIENT_SECRET
 }
@@ -42,7 +43,6 @@ auth_twitter = tweepy.auth.OAuthHandler(CONFIG_TWITTER['consumer_id'], CONFIG_TW
 auth_twitter.secure = True
 
 # Config Server
-URL = 'http://localhost:5000/'
 app = Flask(__name__)  
 
 
@@ -347,4 +347,4 @@ def on_recent():
 if __name__ == '__main__':
     # app.wsgi_app = SessionMiddleware(app.wsgi_app, session_opts)
     app.secret_key = secret.APP_SECRET_KEY
-    app.run(debug=True, host='localhost')
+    app.run(debug=True, host=URL)
