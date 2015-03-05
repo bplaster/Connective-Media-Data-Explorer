@@ -132,7 +132,8 @@ def read_words(tweets):
 			tweet = tweet.split()
 			for word in tweet:
 				if word not in words_dictionary:
-					words_dictionary[word] = 1
+					if len(word) > 1:
+						words_dictionary[word] = 1
 				else:
 					words_dictionary[word] += 1
 	return words_dictionary

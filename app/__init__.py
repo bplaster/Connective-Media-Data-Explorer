@@ -106,7 +106,7 @@ def on_instagram_callback():
 
 @app.route('/process_user')
 def on_recent():
-
+    username = ''
     try:
         auth_twitter = tweepy.auth.OAuthHandler(CONFIG_TWITTER['consumer_id'], CONFIG_TWITTER['consumer_secret'])
         token_twitter = session['access_token_twitter']
@@ -115,9 +115,10 @@ def on_recent():
         token_instagram = session.get('access_token_instagram')
         api_instagram = client.InstagramAPI(access_token=token_instagram)
 
-        return display_visualization(tw.generate_visualization(api_twitter, api_instagram)) 
+        username = tw.generate_visualization(api_twitter, api_instagram)
     except Exception as e:
         print(e)
+    return redirect('process_user/'+username)
 
     # word = 'cat'
     # content = "<h2>User Recent Media</h2>"
@@ -151,7 +152,7 @@ def on_recent():
     # except Exception as e:
     #     print(e)    
 
-
+@app.route('/process_user/<username>')
 def display_visualization(username):
     return render_template("base.html", username=username)
 
