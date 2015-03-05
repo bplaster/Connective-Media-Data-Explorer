@@ -92,7 +92,7 @@ def on_twitter_callback():
     code = request.args.get("oauth_verifier")
     auth_twitter = tweepy.auth.OAuthHandler(CONFIG_TWITTER['consumer_id'], CONFIG_TWITTER['consumer_secret'])
     token = session['request_token']
-    session.delete('request_token')
+    # session.delete('request_token')
     auth_twitter.request_token = token
     session['request_token']= (auth_twitter.request_token.key, auth_twitter.request_token.secret)
     if not code:
