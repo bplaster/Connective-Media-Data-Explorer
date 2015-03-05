@@ -82,7 +82,7 @@ def twitter_auth():
     url = ''
     try:
         url = auth_twitter.get_authorization_url()
-        session['request_token'] = (auth_twitter.request_token.key, auth_twitter.request_token.secret)
+        session['request_token'] = (request.key, request.secret)
     except tweepy.TweepError:
         print 'Error! Failed to get request token.'
     return redirect(url)
