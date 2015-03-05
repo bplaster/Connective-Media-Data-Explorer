@@ -13,10 +13,11 @@ from instagram import client, subscriptions
 import tweepy
 import secret as secret
 # from beaker.middleware import SessionMiddleware
-from flask import Flask, send_file, redirect, request, session
+from flask import Flask, send_file, redirect, request
 
 URL = 'http://104.236.202.250/'
 #URL = 'http://localhost:5000/'
+session = dict()
 
 session_opts = {
     'session.type': 'ext:memcached',
@@ -81,7 +82,7 @@ def twitter_auth():
     url = ''
     try:
         url = auth_twitter.get_authorization_url()
-        session['request_token'] = auth_twitter.request_token
+        session['request_token'] = (auth_twitter.request_token.key, auth_twitter.request_token.secret)
     except tweepy.TweepError:
         print 'Error! Failed to get request token.'
     return redirect(url)
@@ -89,12 +90,12 @@ def twitter_auth():
 
 @app.route('/oauth_twitter_callback')
 def on_twitter_callback(): 
-    code = request.args.get("oauth_verifier")
+    code = request.args["oauth_verifier"]
     auth_twitter = tweepy.auth.OAuthHandler(CONFIG_TWITTER['consumer_id'], CONFIG_TWITTER['consumer_secret'])
     token = session['request_token']
-    # session.delete('request_token')
-    auth_twitter.request_token = token
-    session['request_token']= (auth_twitter.request_token.key, auth_twitter.request_token.secret)
+    del session['request_token']
+    auth_twitter.set_request_token(token[0], token[1])
+    # session['request_token']= (auth_twitter.request_token.key, auth_twitter.request_token.secret)
     if not code:
         return 'Missing code'
     try:
