@@ -16,6 +16,7 @@ import secret as secret
 from flask import Flask, send_file, redirect, request, session
 
 URL = 'http://104.236.202.250/'
+URL = 'http://localhost:5000/'
 
 session_opts = {
     'session.type': 'ext:memcached',
@@ -27,12 +28,12 @@ session_opts = {
 CONFIG_INSTAGRAM = {
     'client_id': secret.INSTAGRAM_CLIENT_ID,
     'client_secret': secret.INSTAGRAM_CLIENT_SECRET,
-    'redirect_uri': URL+'/oauth_instagram_callback',
+    'redirect_uri': URL+'oauth_instagram_callback',
 }
 CONFIG_TWITTER = {
     'consumer_id': secret.TWITTER_CONSUMER_ID,
     'consumer_secret': secret.TWITTER_CONSUMER_SECRET,
-    'redirect_uri': URL+'/oauth_twitter_callback',
+    'redirect_uri': URL+'oauth_twitter_callback',
     'client_id': secret.TWITTER_CLIENT_ID,
     'client_secret': secret.TWITTER_CLIENT_SECRET
 }
@@ -117,10 +118,12 @@ def on_instagram_callback():
         print ("access token instagram=" + access_token)
     except Exception as e:
         print(e)
-    return twitter_auth()
+    return get_nav()
+    # return twitter_auth()
 
 @app.route('/process_images')
 def on_recent(): 
+    word = 'cat'
     content = "<h2>User Recent Media</h2>"
     access_token = session.get('access_token_instagram')
     if not access_token:
@@ -128,223 +131,33 @@ def on_recent():
     try:
         api = client.InstagramAPI(access_token=access_token)
         recent_media, next = api.user_recent_media()
-        photos = []
-        display_photo_html = []
+        photo = None
         for media in recent_media:
             # photos.append('<div style="float:left;">')
             if(media.type == 'image'):
-                # photos.append('<img src="%s"/>' % (media.get_low_resolution_url()))
-                # photos.append(media.get_low_resolution_url())
-                photo = media.get_low_resolution_url()
-                # Process images
-                img = Image.open(cStringIO.StringIO(urllib.urlopen(photo).read()))
-                # i = img_as_ubyte(img)  # To convert to uint8 data type
+                if word in media.caption.text:
+                    photo = media.get_low_resolution_url()
+                    # Process images
+                    # img = Image.open(cStringIO.StringIO(urllib.urlopen(photo).read()))
+                    # i = img_as_ubyte(img)  # To convert to uint8 data type
+                    break
+        if photo == None:
+            media, next = api.tag_recent_media(tag_name=word, count=1)
+            print(media)
+            photo = media[0].get_low_resolution_url()
 
-                # TODO: Check image
-                display_photo_html = []
-                display_photo_html.append('<div style="float:left;">')
-                display_photo_html.append('<img src="%s"/>' % (photo))
-                print(media)
+        display_photo_html = []
+        display_photo_html.append('<div style="float:left;">')
+        display_photo_html.append('<img src="%s"/>' % (photo))
+        print(media)
+
         content += ''.join(display_photo_html)
     except Exception as e:
         print(e)              
     return "%s %s <br/>Remaining API Calls = %s/%s" % (get_nav(),content, api.x_ratelimit_remaining,api.x_ratelimit)
 
-# # extract urls to a list
-# photolist = []
-# for media in user_media:
-#     photolist.append(media.images['standard_resolution'].url)
 
-
-# # process images
-# for p in photolist:
-#     im = Image.open(cStringIO.StringIO(urllib.urlopen(p).read()))
-#     i = img_as_ubyte(im)  # To convert to uint8 data type
-    
-#     #image = exposure.rescale_intensity(i, in_range=(0, 2**7 - 1))
-    
-#     axis('off')
-#     imshow(i,origin='lower')
-#     show()
-
-# @route('/media_like/<id>')
-# def media_like(id): 
-#     access_token = request.session['access_token']
-#     api = client.InstagramAPI(access_token=access_token)
-#     api.like_media(media_id=id)
-#     redirect("/recent")
-
-# @route('/media_unlike/<id>')
-# def media_unlike(id): 
-#     access_token = request.session['access_token']
-#     api = client.InstagramAPI(access_token=access_token)
-#     api.unlike_media(media_id=id)
-#     redirect("/recent")
-
-# @route('/user_media_feed')
-# def on_user_media_feed(): 
-#     access_token = request.session['access_token']
-#     content = "<h2>User Media Feed</h2>"
-#     if not access_token:
-#         return 'Missing Access Token'
-#     try:
-#         api = client.InstagramAPI(access_token=access_token)
-#         media_feed, next = api.user_media_feed()
-#         photos = []
-#         for media in media_feed:
-#             photos.append('<img src="%s"/>' % media.get_standard_resolution_url())
-#         counter = 1
-#         while next and counter < 3:
-#             media_feed, next = api.user_media_feed(with_next_url=next)
-#             for media in media_feed:
-#                 photos.append('<img src="%s"/>' % media.get_standard_resolution_url())
-#             counter += 1
-#         content += ''.join(photos)
-#     except Exception as e:
-#         print(e)              
-#     return "%s %s <br/>Remaining API Calls = %s/%s" % (get_nav(),content,api.x_ratelimit_remaining,api.x_ratelimit)
-
-# @route('/location_recent_media')
-# def location_recent_media(): 
-#     access_token = request.session['access_token']
-#     content = "<h2>Location Recent Media</h2>"
-#     if not access_token:
-#         return 'Missing Access Token'
-#     try:
-#         api = client.InstagramAPI(access_token=access_token)
-#         recent_media, next = api.location_recent_media(location_id=514276)
-#         photos = []
-#         for media in recent_media:
-#             photos.append('<img src="%s"/>' % media.get_standard_resolution_url())
-#         content += ''.join(photos)
-#     except Exception as e:
-#         print(e)              
-#     return "%s %s <br/>Remaining API Calls = %s/%s" % (get_nav(),content,api.x_ratelimit_remaining,api.x_ratelimit)
-
-# @route('/media_search')
-# def media_search(): 
-#     access_token = request.session['access_token']
-#     content = "<h2>Media Search</h2>"
-#     if not access_token:
-#         return 'Missing Access Token'
-#     try:
-#         api = client.InstagramAPI(access_token=access_token)
-#         media_search = api.media_search(lat="37.7808851",lng="-122.3948632",distance=1000)
-#         photos = []
-#         for media in media_search:
-#             photos.append('<img src="%s"/>' % media.get_standard_resolution_url())
-#         content += ''.join(photos)
-#     except Exception as e:
-#         print(e)              
-#     return "%s %s <br/>Remaining API Calls = %s/%s" % (get_nav(),content,api.x_ratelimit_remaining,api.x_ratelimit)
-
-# @route('/media_popular')
-# def media_popular(): 
-#     access_token = request.session['access_token']
-#     content = "<h2>Popular Media</h2>"
-#     if not access_token:
-#         return 'Missing Access Token'
-#     try:
-#         api = client.InstagramAPI(access_token=access_token)
-#         media_search = api.media_popular()
-#         photos = []
-#         for media in media_search:
-#             photos.append('<img src="%s"/>' % media.get_standard_resolution_url())
-#         content += ''.join(photos)
-#     except Exception as e:
-#         print(e)              
-#     return "%s %s <br/>Remaining API Calls = %s/%s" % (get_nav(),content,api.x_ratelimit_remaining,api.x_ratelimit)
-
-# @route('/user_search')
-# def user_search(): 
-#     access_token = request.session['access_token']
-#     content = "<h2>User Search</h2>"
-#     if not access_token:
-#         return 'Missing Access Token'
-#     try:
-#         api = client.InstagramAPI(access_token=access_token)
-#         user_search = api.user_search(q="Instagram")
-#         users = []
-#         for user in user_search:
-#             users.append('<li><img src="%s">%s</li>' % (user.profile_picture,user.username))
-#         content += ''.join(users)
-#     except Exception as e:
-#         print(e)              
-#     return "%s %s <br/>Remaining API Calls = %s/%s" % (get_nav(),content,api.x_ratelimit_remaining,api.x_ratelimit)
-
-# @route('/user_follows')
-# def user_follows(): 
-#     access_token = request.session['access_token']
-#     content = "<h2>User Follows</h2>"
-#     if not access_token:
-#         return 'Missing Access Token'
-#     try:
-#         api = client.InstagramAPI(access_token=access_token)
-#         # 25025320 is http://instagram.com/instagram
-#         user_follows, next = api.user_follows('25025320')
-#         users = []
-#         for user in user_follows:
-#             users.append('<li><img src="%s">%s</li>' % (user.profile_picture,user.username))
-#         while next:
-#             user_follows, next = api.user_follows(with_next_url=next)
-#             for user in user_follows:
-#                 users.append('<li><img src="%s">%s</li>' % (user.profile_picture,user.username))
-#         content += ''.join(users)
-#     except Exception as e:
-#         print(e)              
-#     return "%s %s <br/>Remaining API Calls = %s/%s" % (get_nav(),content,api.x_ratelimit_remaining,api.x_ratelimit)
-
-# @route('/location_search')
-# def location_search(): 
-#     access_token = request.session['access_token']
-#     content = "<h2>Location Search</h2>"
-#     if not access_token:
-#         return 'Missing Access Token'
-#     try:
-#         api = client.InstagramAPI(access_token=access_token)
-#         location_search = api.location_search(lat="37.7808851",lng="-122.3948632",distance=1000)
-#         locations = []
-#         for location in location_search:
-#             locations.append('<li>%s  <a href="https://www.google.com/maps/preview/@%s,%s,19z">Map</a>  </li>' % (location.name,location.point.latitude,location.point.longitude))
-#         content += ''.join(locations)
-#     except Exception as e:
-#         print(e)              
-#     return "%s %s <br/>Remaining API Calls = %s/%s" % (get_nav(),content,api.x_ratelimit_remaining,api.x_ratelimit)
-
-# @route('/tag_search')
-# def tag_search(): 
-#     access_token = request.session['access_token']
-#     content = "<h2>Tag Search</h2>"
-#     if not access_token:
-#         return 'Missing Access Token'
-#     try:
-#         api = client.InstagramAPI(access_token=access_token)
-#         tag_search, next_tag = api.tag_search(q="catband")
-#         tag_recent_media, next = api.tag_recent_media(tag_name=tag_search[0].name)
-#         photos = []
-#         for tag_media in tag_recent_media:
-#             photos.append('<img src="%s"/>' % tag_media.get_standard_resolution_url())
-#         content += ''.join(photos)
-#     except Exception as e:
-#         print(e)              
-#     return "%s %s <br/>Remaining API Calls = %s/%s" % (get_nav(),content,api.x_ratelimit_remaining,api.x_ratelimit)
-
-# @route('/realtime_callback')
-# @post('/realtime_callback')
-# def on_realtime_callback():
-#     mode = request.GET.get("hub.mode")
-#     challenge = request.GET.get("hub.challenge")
-#     verify_token = request.GET.get("hub.verify_token")
-#     if challenge: 
-#         return challenge
-#     else:
-#         x_hub_signature = request.header.get('X-Hub-Signature')
-#         raw_response = request.body.read()
-#         try:
-#             reactor.process(CONFIG['client_secret'], raw_response, x_hub_signature)
-#         except subscriptions.SubscriptionVerifyError:
-#             print("Signature mismatch")
 if __name__ == '__main__':
     # app.wsgi_app = SessionMiddleware(app.wsgi_app, session_opts)
     app.secret_key = secret.APP_SECRET_KEY
-    app.run(debug=True, host=URL)
+    app.run(debug=True, host='localhost', port=5000)
