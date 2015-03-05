@@ -81,7 +81,7 @@ def twitter_auth():
     url = ''
     try:
         url = auth_twitter.get_authorization_url()
-        session.set('request_token', (auth_twitter.request_token.key, auth_twitter.request_token.secret))
+        session['request_token'] = auth_twitter.request_token
     except tweepy.TweepError:
         print 'Error! Failed to get request token.'
     return redirect(url)
@@ -89,23 +89,23 @@ def twitter_auth():
 
 @app.route('/oauth_twitter_callback')
 def on_twitter_callback(): 
-    # code = request.args.get("oauth_verifier")
-    # auth_twitter = tweepy.auth.OAuthHandler(CONFIG_TWITTER['consumer_id'], CONFIG_TWITTER['consumer_secret'])
-    # # token = session['request_token']
-    # # del session['request_token']
-    # # auth.set_request_token(token[0], token[1])
-    # session['request_token']= (auth_twitter.request_token.key, auth_twitter.request_token.secret)
-    # if not code:
-    #     return 'Missing code'
-    # try:
-    #     access_token = auth_twitter.get_access_token(code)
-    #     if not access_token:
-    #         return 'Could not get access token'
-    #     api = tweepy.API(auth_twitter)
-    #     session['access_token_twitter'] = access_token
-    #     print ("access token twitter =" + access_token)
-    # except Exception as e:
-    #     print(e)
+    code = request.args.get("oauth_verifier")
+    auth_twitter = tweepy.auth.OAuthHandler(CONFIG_TWITTER['consumer_id'], CONFIG_TWITTER['consumer_secret'])
+    token = session['request_token']
+    session.delete('request_token')
+    auth_twitter.request_token = token
+    session['request_token']= (auth_twitter.request_token.key, auth_twitter.request_token.secret)
+    if not code:
+        return 'Missing code'
+    try:
+        access_token = auth_twitter.get_access_token(code)
+        if not access_token:
+            return 'Could not get access token'
+        api = tweepy.API(auth_twitter)
+        session['access_token_twitter'] = access_token
+        print ("access token twitter =" + access_token)
+    except Exception as e:
+        print(e)
     return get_nav()
 
 @app.route('/oauth_instagram_callback')
