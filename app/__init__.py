@@ -15,8 +15,8 @@ import secret as secret
 # from beaker.middleware import SessionMiddleware
 from flask import Flask, send_file, redirect, request, session
 
-# URL = 'http://104.236.202.250:8080/'
-URL = 'http://localhost:8080/'
+URL = 'http://104.236.202.250/'
+#URL = 'http://localhost:8080/'
 
 session_opts = {
     'session.type': 'ext:memcached',
@@ -34,8 +34,6 @@ CONFIG_TWITTER = {
     'consumer_id': secret.TWITTER_CONSUMER_ID,
     'consumer_secret': secret.TWITTER_CONSUMER_SECRET,
     'redirect_uri': URL+'oauth_twitter_callback',
-    'client_id': secret.TWITTER_CLIENT_ID,
-    'client_secret': secret.TWITTER_CLIENT_SECRET
 }
 
 auth_instagram = client.InstagramAPI(**CONFIG_INSTAGRAM)
@@ -120,8 +118,8 @@ def on_instagram_callback():
         print ("access token instagram=" + access_token)
     except Exception as e:
         print(e)
-    return get_nav()
-    # return twitter_auth()
+    #return get_nav()
+    return twitter_auth()
 
 @app.route('/process_images')
 def on_recent(): 
