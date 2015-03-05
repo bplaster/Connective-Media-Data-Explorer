@@ -37,7 +37,10 @@ auth_twitter = None
 def home():
     try:
         url_instagram = auth_instagram.get_authorize_url(scope=["basic"])
-        menu = '<li><a href="%s">Login with Instagram</a></li>' % url_instagram 
+        menu = '<h1>Connective Media Social Data Explorer</h1>'
+        menu +="<li><a href='https://github.com/bplaster/Connective-Media-Data-Explorer'>Github</a></li>"
+        menu += '<li><a href="%s">Login with Instagram</a></li>' % url_instagram 
+
         return menu
     except Exception as e:
         print(e)
@@ -51,7 +54,8 @@ def get_nav():
     return nav_menu
 
 def get_twitter(): 
-    menu = "<a href='/twitter_login'>Login with Twitter</a>"
+    menu = '<h1>Connective Media Social Data Explorer</h1>'
+    menu += "<a href='/twitter_login'>Login with Twitter</a>"
     return menu
 
 @app.route('/twitter_login')
