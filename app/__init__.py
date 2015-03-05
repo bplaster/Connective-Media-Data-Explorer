@@ -7,7 +7,6 @@ import os
 from instagram import client, subscriptions
 import tweepy
 import secret as secret
-# from beaker.middleware import SessionMiddleware
 from flask import Flask, send_file, redirect, request, render_template, json
 
 #URL = 'http://104.236.202.250/'
@@ -44,7 +43,7 @@ def home():
         print(e)
 
 def get_nav(): 
-    nav_menu = ("<h1>Python Instagram</h1>"
+    nav_menu = ("<h1>Connective Media Social Data Explorer</h1>"
                 "<ul>"
                     "<li><a href='/process_user'>Begin</a></li>"
                 "</ul>")
@@ -74,7 +73,6 @@ def on_twitter_callback():
     token = session['request_token']
     del session['request_token']
     auth_twitter.request_token = token
-    # session['request_token']= (auth_twitter.request_token.key, auth_twitter.request_token.secret)
     if not code:
         return 'Missing code'
     try:
@@ -102,7 +100,6 @@ def on_instagram_callback():
         print ("access token instagram=" + access_token)
     except Exception as e:
         print(e)
-    #return get_nav()
     return get_twitter()
 
 @app.route('/process_user')
@@ -119,40 +116,6 @@ def on_recent():
         return display_visualization(tw.generate_visualization(api_twitter, api_instagram))
     except Exception as e:
         print(e)
-    #return redirect('/process_user/'+username)
-    # return render_template("base.html", data=json_string)
-
-    # word = 'cat'
-    # content = "<h2>User Recent Media</h2>"
-    # access_token = session.get('access_token_instagram')
-    # if not access_token:
-    #     return 'Missing Access Token'
-    # try:
-    #     api = client.InstagramAPI(access_token=access_token)
-    #     recent_media, next = api.user_recent_media()
-    #     photo = None
-    #     for media in recent_media:
-    #         # photos.append('<div style="float:left;">')
-    #         if(media.type == 'image'):
-    #             if word in media.caption.text:
-    #                 photo = media.get_low_resolution_url()
-    #                 # Process images
-    #                 # img = Image.open(cStringIO.StringIO(urllib.urlopen(photo).read()))
-    #                 # i = img_as_ubyte(img)  # To convert to uint8 data type
-    #                 break
-    #     if photo == None:
-    #         media, next = api.tag_recent_media(tag_name=word, count=1)
-    #         print(media)
-    #         photo = media[0].get_low_resolution_url()
-
-    #     display_photo_html = []
-    #     display_photo_html.append('<div style="float:left;">')
-    #     display_photo_html.append('<img src="%s"/>' % (photo))
-    #     print(media)
-
-    #     content += ''.join(display_photo_html)
-    # except Exception as e:
-    #     print(e)    
 
 @app.route('/process_user/<data>')
 def display_visualization(data):
@@ -163,5 +126,4 @@ def display_visualization(data):
 
 
 if __name__ == '__main__':
-    # app.wsgi_app = SessionMiddleware(app.wsgi_app, session_opts)
     app.run(debug=True, host='localhost', port=5000)

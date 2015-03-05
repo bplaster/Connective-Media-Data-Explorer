@@ -12,21 +12,10 @@ import re
 import itertools
 from nltk.corpus import stopwords
  
-#Twitter API credentials
-consumer_key = 'raTV2bT4CKuRqXaPbmcFHxTJh'#keep the quotes, replace this with your consumer key
-consumer_secret = 'H8EUBot4exSD7cL1qQDkwRsHkdqNPu81xSII1MjfVIYRsMILPJ'#keep the quotes, replace this with your consumer secret key
-access_key = '469683422-r8dOS3YxW0sRfcbLRoVDX8JOabV7lV1UKJtjAmDr'#keep the quotes, replace this with your access token
-access_secret = '52Njqdo6ILKHkZTLNQA5pOOs9EXB08sZxNaak3NzZubLg'#keep the quotes, replace this with your access token secret
-
- 
 def get_all_tweets(screen_name, api, attempts=0):
 	#Twitter only allows access to a users most recent 3240 tweets with this method
 	try:
 		print screen_name
-		#authorize twitter, initialize tweepy
-		# auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-		# auth.set_access_token(access_key, access_secret)
-		# api = tweepy.API(auth)
 		
 		#initialize a list to hold all the tweepy Tweets
 		alltweets = []	
@@ -39,23 +28,6 @@ def get_all_tweets(screen_name, api, attempts=0):
 		
 		#save the id of the oldest tweet less one
 		oldest = alltweets[-1].id - 1
-		
-		#keep grabbing tweets until there are no tweets left to grab
-		# while len(new_tweets) > 0:
-		# 	print "getting tweets before %s" % (oldest)
-			
-		# 	#all subsiquent requests use the max_id param to prevent duplicates
-		# 	new_tweets = api.user_timeline(screen_name = screen_name,count=200,max_id=oldest)
-			
-		# 	#save most recent tweets
-		# 	alltweets.extend(new_tweets)
-			
-		# 	#update the id of the oldest tweet less one
-		# 	oldest = alltweets[-1].id - 1
-			
-		# 	print "...%s tweets downloaded so far" % (len(alltweets))
-		
-		#transform the tweepy tweets into a 2D array that will populate the csv	 
 		
 		return [tweet.text.encode("utf-8") for tweet in alltweets]
 
@@ -70,9 +42,6 @@ def get_all_tweets(screen_name, api, attempts=0):
 		else:
 			print "Not authorized for: " + screen_name
 			
-		
- 
-
 def get_current_users():
 	path = "tweets/"
 	files = []
@@ -103,26 +72,6 @@ def clean_tweet(string):
 	if len(string) == 1:
 		string = ""
 	return string
-
-# def read_words(username):
-# 	words_dictionary = {}
-# 	flag = True
-# 	file_name = username+".csv"
-
-# 	for line in file('tweets/'+file_name):
-# 		if flag == False:
-# 			line = line.strip().split(',')
-# 			if len(line) == 3:
-# 				tweet = clean_tweet(line[2])
-# 				tweet = tweet.split()
-# 				for word in tweet:
-# 					if word not in words_dictionary:
-# 						words_dictionary[word] = 1
-# 					else:
-# 						words_dictionary[word] += 1
-# 		flag = False
-
-# 	return words_dictionary
 
 def read_words(tweets):
 	words_dictionary = {}
@@ -167,17 +116,11 @@ def get_image_url_for_word(word, api):
     except Exception as e:
         print(e)              
 
-# if __name__ == '__main__':
 def generate_visualization(api, api_instagram):
 	ignore_users = []
 
-	#Set up the API with the required keys and tokens...
-	# auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-	# auth.set_access_token(access_key, access_secret)
-	# api = tweepy.API(auth)
-
 	#Get all users for which we already have tweets:
-	current_users = [] #get_current_users()
+	current_users = []
 	user_images = {}
 	tweets = {}
 	username = ''
@@ -289,11 +232,6 @@ def generate_visualization(api, api_instagram):
 		data['links'].append({'source': 0, 'target':counter, 'stroke': 2, 'length': 350, 'word':word, 'value': 'visible'})
 		node_counter += 1
 	
-	# for i in range(node_counter):
-	# 	for j in range(node_counter):
-	# 		if(j < i):
-	# 			data['links'].append({'source': i, 'target':j, 'stroke': 2, 'length': 500, 'word':word, 'value': 'invisible'})
-
 	link_list = {}
 	for element in connections_list:
 		data['nodes'].append({'name':element[1], 'group':word_group[element[2]], 'rad': 3, 'type': 'grav', 'image_url': user_images[element[1]]})
@@ -301,36 +239,10 @@ def generate_visualization(api, api_instagram):
 		#link_list[word_group[element[2]]] = 
 		node_counter += 1
 
-
-
-
-	# 	if word_group[element[2]] not in links_list:
-	# 		links_list[word_group[element[2]]] = []
-		
-	# 	links_list[word_group[element[2]]].append(node_counter)
-	# 	node_counter += 1
-	
-	# for link in links_list:
-	# 	for link2 in links_list[link]:
-	# 		for link3 in lins_list[link]:
-	# 			data['links'].append({'source': link2, 'target':link3, 'stroke': 2, 'length': 150, 'word':'', 'value': ''})
-	# # 			#data['links'].append({'source': link2, 'target':0, 'stroke': 2, 'length': 200, 'word':'', 'value': ''})
-
 	# with open("static/data/"+username+'.json', 'wt') as out:
 	# 	res = json.dump(data, out, sort_keys=True, indent=4, separators=(',', ': '))
 
 	return json.dumps(data, indent=4, sort_keys=True)
-
-
-
-			#connections_list.append(username, user)
-
-
-
-
-
-
-
 
 
 
