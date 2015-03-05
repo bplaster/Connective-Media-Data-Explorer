@@ -15,15 +15,13 @@ import secret as secret
 # from beaker.middleware import SessionMiddleware
 from flask import Flask, send_file, redirect, request
 
-URL = 'http://104.236.202.250/'
-#URL = 'http://localhost:5000/'
+#URL = 'http://104.236.202.250/'
+URL = 'http://localhost:5000/'
 session = dict()
 
-session_opts = {
-    'session.type': 'ext:memcached',
-    'session.data_dir': './session/',
-    'session.auto': True,
-}
+# Config Server
+app = Flask(__name__) 
+app.secret_key = secret.APP_SECRET_KEY 
 
 # API keys
 CONFIG_INSTAGRAM = {
@@ -38,23 +36,6 @@ CONFIG_TWITTER = {
 }
 
 auth_instagram = client.InstagramAPI(**CONFIG_INSTAGRAM)
-
-auth_twitter = tweepy.auth.OAuthHandler(CONFIG_TWITTER['consumer_id'], CONFIG_TWITTER['consumer_secret'])
-auth_twitter.secure = True
-
-# Config Server
-app = Flask(__name__) 
-app.secret_key = secret.APP_SECRET_KEY 
-
-# @app.before_request
-# def setup_request():
-#     session = request.environ['beaker.session']
-
-# def process_tag_update(update):
-#     print(update)
-
-# reactor = subscriptions.SubscriptionsReactor()
-# reactor.register_callback(subscriptions.SubscriptionType.TAG, process_tag_update)
 
 @app.route('/')
 def home():
@@ -80,9 +61,10 @@ def get_twitter():
 @app.route('/twitter_login')
 def twitter_auth():
     url = ''
+    auth_twitter = tweepy.OAuthHandler(CONFIG_TWITTER['consumer_id'], CONFIG_TWITTER['consumer_secret'], CONFIG_TWITTER['redirect_uri'])
     try:
         url = auth_twitter.get_authorization_url()
-        session['request_token'] = (request.key, request.secret)
+        session['request_token'] = auth_twitter.request_token
     except tweepy.TweepError:
         print 'Error! Failed to get request token.'
     return redirect(url)
@@ -94,7 +76,7 @@ def on_twitter_callback():
     auth_twitter = tweepy.auth.OAuthHandler(CONFIG_TWITTER['consumer_id'], CONFIG_TWITTER['consumer_secret'])
     token = session['request_token']
     del session['request_token']
-    auth_twitter.set_request_token(token[0], token[1])
+    auth_twitter.request_token = token
     # session['request_token']= (auth_twitter.request_token.key, auth_twitter.request_token.secret)
     if not code:
         return 'Missing code'
