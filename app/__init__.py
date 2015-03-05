@@ -116,10 +116,10 @@ def on_recent():
         token_instagram = session.get('access_token_instagram')
         api_instagram = client.InstagramAPI(access_token=token_instagram)
 
-        json_string = tw.generate_visualization(api_twitter, api_instagram)
+        return display_visualization(tw.generate_visualization(api_twitter, api_instagram))
     except Exception as e:
         print(e)
-    return redirect('/process_user/'+username)
+    #return redirect('/process_user/'+username)
     # return render_template("base.html", data=json_string)
 
     # word = 'cat'
@@ -154,11 +154,11 @@ def on_recent():
     # except Exception as e:
     #     print(e)    
 
-@app.route('/process_user/<username>')
-def display_visualization(username):
-    SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
-    json_url = os.path.join(SITE_ROOT, "static/data", username+".json")
-    data = json.load(open(json_url))
+@app.route('/process_user/<data>')
+def display_visualization(data):
+    # SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
+    # json_url = os.path.join(SITE_ROOT, "static/data", username+".json")
+    # data = json.load(open(json_url))
     return render_template("base.html", data=data)
 
 

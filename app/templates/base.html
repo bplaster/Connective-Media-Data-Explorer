@@ -43,10 +43,10 @@
  * July 2012
  * some code adapted from http://bl.ocks.org/1153292
  */
- function decodeJSON(encodedJSON) {
-  var decodedJSON = $('<div/>').html(encodedJSON).text();
-  return $.parseJSON(decodedJSON);
- }
+ // function decodeJSON(encodedJSON) {
+ //  var decodedJSON = $('<div/>').html(encodedJSON).text();
+ //  return $.parseJSON(decodedJSON);
+ // }
 
  function draw(){
 
@@ -59,9 +59,7 @@
     {"name":"Mlle.Baptistine","group":5, rad:5}
   ],*/
 
-    // nodes = {{data}}["nodes"]
-    // links = {{data}}["links"]
-    json_data = {{data | safe}}
+    json_data = JSON.parse({{data | safe}})
     // parsed_json = JSON.parse(json_data)
 
     nodes = json_data.nodes
