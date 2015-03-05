@@ -59,8 +59,7 @@
     {"name":"Mlle.Baptistine","group":5, rad:5}
   ],*/
 
-    json_data = JSON.parse({{data | safe}})
-    // parsed_json = JSON.parse(json_data)
+    json_data = {{data | safe}}
 
     nodes = json_data.nodes
     links = json_data.links
