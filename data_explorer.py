@@ -15,8 +15,8 @@ import secret as secret
 # from beaker.middleware import SessionMiddleware
 from flask import Flask, send_file, redirect, request, session
 
-URL = 'http://104.236.202.250/'
-URL = 'http://localhost:5000/'
+# URL = 'http://104.236.202.250:8080/'
+URL = 'http://localhost:8080/'
 
 session_opts = {
     'session.type': 'ext:memcached',
@@ -160,4 +160,4 @@ def on_recent():
 if __name__ == '__main__':
     # app.wsgi_app = SessionMiddleware(app.wsgi_app, session_opts)
     app.secret_key = secret.APP_SECRET_KEY
-    app.run(debug=True, host='localhost', port=5000)
+    app.run(debug=True, host='localhost', port=8080)
