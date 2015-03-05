@@ -2,12 +2,13 @@ import urllib
 import urllib2
 import cStringIO
 import twitter2 as tw
+import os
 
 from instagram import client, subscriptions
 import tweepy
 import secret as secret
 # from beaker.middleware import SessionMiddleware
-from flask import Flask, send_file, redirect, request, render_template
+from flask import Flask, send_file, redirect, request, render_template, json
 
 #URL = 'http://104.236.202.250/'
 URL = 'http://localhost:5000/'
@@ -115,10 +116,11 @@ def on_recent():
         token_instagram = session.get('access_token_instagram')
         api_instagram = client.InstagramAPI(access_token=token_instagram)
 
-        username = tw.generate_visualization(api_twitter, api_instagram)
+        json_string = tw.generate_visualization(api_twitter, api_instagram)
     except Exception as e:
         print(e)
-    return redirect('process_user/'+username)
+    return redirect('/process_user/'+username)
+    # return render_template("base.html", data=json_string)
 
     # word = 'cat'
     # content = "<h2>User Recent Media</h2>"
@@ -154,7 +156,10 @@ def on_recent():
 
 @app.route('/process_user/<username>')
 def display_visualization(username):
-    return render_template("base.html", username=username)
+    SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
+    json_url = os.path.join(SITE_ROOT, "static/data", username+".json")
+    data = json.load(open(json_url))
+    return render_template("base.html", data=data)
 
 
 if __name__ == '__main__':

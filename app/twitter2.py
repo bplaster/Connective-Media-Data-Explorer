@@ -316,10 +316,10 @@ def generate_visualization(api, api_instagram):
 	# 			data['links'].append({'source': link2, 'target':link3, 'stroke': 2, 'length': 150, 'word':'', 'value': ''})
 	# # 			#data['links'].append({'source': link2, 'target':0, 'stroke': 2, 'length': 200, 'word':'', 'value': ''})
 
-	with open(username+'.json', 'wt') as out:
+	with open("static/data/"+username+'.json', 'wt') as out:
 		res = json.dump(data, out, sort_keys=True, indent=4, separators=(',', ': '))
 
-	return username
+	return json.dumps(data, indent=4, sort_keys=True)
 
 
 
