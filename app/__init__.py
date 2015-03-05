@@ -113,9 +113,11 @@ def on_instagram_callback():
 
 @app.route('/process_images')
 def on_recent():
-    if not auth_twitter:
-        api = tweepy.API(auth_twitter)
-        tw.generate_visualization(api) 
+    auth_twitter = tweepy.auth.OAuthHandler(CONFIG_TWITTER['consumer_id'], CONFIG_TWITTER['consumer_secret'])
+    token = session['access_token_twitter']
+    auth_twitter.set_access_token(token[0], token[1])
+    api = tweepy.API(auth_twitter)
+    tw.generate_visualization(api) 
 
     word = 'cat'
     content = "<h2>User Recent Media</h2>"

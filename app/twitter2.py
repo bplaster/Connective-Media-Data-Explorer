@@ -125,15 +125,15 @@ def clean_tweet(string):
 
 def read_words(tweets):
 	words_dictionary = {}
-
-	for tweet in tweets:
-		tweet = clean_tweet(tweet)
-		tweet = tweet.split()
-		for word in tweet:
-			if word not in words_dictionary:
-				words_dictionary[word] = 1
-			else:
-				words_dictionary[word] += 1
+	if tweets:
+		for tweet in tweets:
+			tweet = clean_tweet(tweet)
+			tweet = tweet.split()
+			for word in tweet:
+				if word not in words_dictionary:
+					words_dictionary[word] = 1
+				else:
+					words_dictionary[word] += 1
 	return words_dictionary
 
 def change_scale(current_val, current_min, current_max, final_min, final_max):
@@ -161,6 +161,7 @@ def generate_visualization(api):
 	current_users = [] #get_current_users()
 	user_images = {}
 	tweets = {}
+	username = ''
 
 	print "Current Users: "
 	print current_users
@@ -298,6 +299,8 @@ def generate_visualization(api):
 
 	with open('json/'+username+'.json', 'wt') as out:
 		res = json.dump(data, out, sort_keys=True, indent=4, separators=(',', ': '))
+
+	return username
 
 
 
