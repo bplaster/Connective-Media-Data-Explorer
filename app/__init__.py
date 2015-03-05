@@ -60,8 +60,18 @@ app.secret_key = secret.APP_SECRET_KEY
 @app.route('/')
 def home():
     try:
-        url = auth_instagram.get_authorize_url(scope=["basic"])
-        return '<a href="%s">Login with Instagram</a>' % url
+        menu = ''
+        if not 'access_token_instagram' in session:     
+            url = auth_instagram.get_authorize_url(scope=["basic"])
+            menu += '<a href="%s">Login with Instagram</a>' % url
+        if not 'access_token_twitter' in session:     
+            url = auth_twitter.get_authorization_url()
+            session['request_token']= (auth_twitter.request_token.key, auth_twitter.request_token.secret)
+            menu += '<a href="%s">Login with Twitter</a>' % url
+        if menu == '':
+            return get_nav()
+        else:
+            return menu
     except Exception as e:
         print(e)
 
@@ -73,14 +83,14 @@ def get_nav():
             
     return nav_menu
 
-def twitter_auth():
-    url = ''
-    try:
-        url = auth_twitter.get_authorization_url()
-        session['request_token']= (auth_twitter.request_token.key, auth_twitter.request_token.secret)
-    except tweepy.TweepError:
-        print 'Error! Failed to get request token.'
-    return redirect(url)
+# def twitter_auth():
+#     url = ''
+#     try:
+#         url = auth_twitter.get_authorization_url()
+#         session['request_token']= (auth_twitter.request_token.key, auth_twitter.request_token.secret)
+#     except tweepy.TweepError:
+#         print 'Error! Failed to get request token.'
+#     return redirect(url)
 
 
 @app.route('/oauth_twitter_callback')
@@ -102,7 +112,7 @@ def on_twitter_callback():
         print ("access token twitter =" + access_token)
     except Exception as e:
         print(e)
-    return get_nav()
+    return home()
 
 @app.route('/oauth_instagram_callback')
 def on_instagram_callback(): 
@@ -119,7 +129,7 @@ def on_instagram_callback():
     except Exception as e:
         print(e)
     #return get_nav()
-    return twitter_auth()
+    return home()
 
 @app.route('/process_images')
 def on_recent(): 
