@@ -1,20 +1,13 @@
-# from pylab import *
-# import skimage
-# from skimage import io, exposure
-# import skimage.io._io as io
-# from skimage.data import load
-# from skimage.util import img_as_ubyte
 import urllib
 import urllib2
 import cStringIO
 import twitter2 as tw
 
-# from PIL import Image
 from instagram import client, subscriptions
 import tweepy
 import secret as secret
 # from beaker.middleware import SessionMiddleware
-from flask import Flask, send_file, redirect, request
+from flask import Flask, send_file, redirect, request, render_template
 
 #URL = 'http://104.236.202.250/'
 URL = 'http://localhost:5000/'
@@ -52,7 +45,7 @@ def home():
 def get_nav(): 
     nav_menu = ("<h1>Python Instagram</h1>"
                 "<ul>"
-                    "<li><a href='/process_images'>Process Images</a></li>"
+                    "<li><a href='/process_user'>Begin</a></li>"
                 "</ul>")
             
     return nav_menu
@@ -111,46 +104,56 @@ def on_instagram_callback():
     #return get_nav()
     return get_twitter()
 
-@app.route('/process_images')
+@app.route('/process_user')
 def on_recent():
-    auth_twitter = tweepy.auth.OAuthHandler(CONFIG_TWITTER['consumer_id'], CONFIG_TWITTER['consumer_secret'])
-    token = session['access_token_twitter']
-    auth_twitter.set_access_token(token[0], token[1])
-    api = tweepy.API(auth_twitter)
-    tw.generate_visualization(api) 
 
-    word = 'cat'
-    content = "<h2>User Recent Media</h2>"
-    access_token = session.get('access_token_instagram')
-    if not access_token:
-        return 'Missing Access Token'
     try:
-        api = client.InstagramAPI(access_token=access_token)
-        recent_media, next = api.user_recent_media()
-        photo = None
-        for media in recent_media:
-            # photos.append('<div style="float:left;">')
-            if(media.type == 'image'):
-                if word in media.caption.text:
-                    photo = media.get_low_resolution_url()
-                    # Process images
-                    # img = Image.open(cStringIO.StringIO(urllib.urlopen(photo).read()))
-                    # i = img_as_ubyte(img)  # To convert to uint8 data type
-                    break
-        if photo == None:
-            media, next = api.tag_recent_media(tag_name=word, count=1)
-            print(media)
-            photo = media[0].get_low_resolution_url()
+        auth_twitter = tweepy.auth.OAuthHandler(CONFIG_TWITTER['consumer_id'], CONFIG_TWITTER['consumer_secret'])
+        token_twitter = session['access_token_twitter']
+        auth_twitter.set_access_token(token_twitter[0], token_twitter[1])
+        api_twitter = tweepy.API(auth_twitter)
+        token_instagram = session.get('access_token_instagram')
+        api_instagram = client.InstagramAPI(access_token=token_instagram)
 
-        display_photo_html = []
-        display_photo_html.append('<div style="float:left;">')
-        display_photo_html.append('<img src="%s"/>' % (photo))
-        print(media)
-
-        content += ''.join(display_photo_html)
+        return display_visualization(tw.generate_visualization(api_twitter, api_instagram)) 
     except Exception as e:
-        print(e)              
-    return "%s %s <br/>Remaining Instagram API Calls = %s/%s" % (get_nav(),content, api.x_ratelimit_remaining,api.x_ratelimit)
+        print(e)
+
+    # word = 'cat'
+    # content = "<h2>User Recent Media</h2>"
+    # access_token = session.get('access_token_instagram')
+    # if not access_token:
+    #     return 'Missing Access Token'
+    # try:
+    #     api = client.InstagramAPI(access_token=access_token)
+    #     recent_media, next = api.user_recent_media()
+    #     photo = None
+    #     for media in recent_media:
+    #         # photos.append('<div style="float:left;">')
+    #         if(media.type == 'image'):
+    #             if word in media.caption.text:
+    #                 photo = media.get_low_resolution_url()
+    #                 # Process images
+    #                 # img = Image.open(cStringIO.StringIO(urllib.urlopen(photo).read()))
+    #                 # i = img_as_ubyte(img)  # To convert to uint8 data type
+    #                 break
+    #     if photo == None:
+    #         media, next = api.tag_recent_media(tag_name=word, count=1)
+    #         print(media)
+    #         photo = media[0].get_low_resolution_url()
+
+    #     display_photo_html = []
+    #     display_photo_html.append('<div style="float:left;">')
+    #     display_photo_html.append('<img src="%s"/>' % (photo))
+    #     print(media)
+
+    #     content += ''.join(display_photo_html)
+    # except Exception as e:
+    #     print(e)    
+
+
+def display_visualization(username):
+    return render_template("base.html", username=username)
 
 
 if __name__ == '__main__':

@@ -2,6 +2,7 @@
 # encoding: utf-8
  
 import tweepy
+import instagram
 import csv
 import time
 import json
@@ -148,8 +149,25 @@ def paginate(iterable, page_size):
             break
         yield page
 
+def get_image_url_for_word(word, api):
+    try:
+        recent_media, next = api.user_recent_media()
+        photo = ''
+        for media in recent_media:
+            if(media.type == 'image'):
+                if word in media.caption.text:
+                    photo = media.get_low_resolution_url()
+                    break
+        if photo == '':
+            media, next = api.tag_recent_media(tag_name=word, count=1)
+            photo = media[0].get_low_resolution_url()
+        print photo
+        return photo
+    except Exception as e:
+        print(e)              
+
 # if __name__ == '__main__':
-def generate_visualization(api):
+def generate_visualization(api, api_instagram):
 	ignore_users = []
 
 	#Set up the API with the required keys and tokens...
@@ -188,7 +206,7 @@ def generate_visualization(api):
 	#Iterate through the users followers and get their tweets and profile pics
 	followers_users = []
 	followers = api.followers_ids(username)
-	for page in paginate(followers, 30):
+	for page in paginate(followers, 5):
 		results = api.lookup_users(user_ids=page)
 		for follower in results:
 		    follower_user_name = follower.screen_name
@@ -266,7 +284,7 @@ def generate_visualization(api):
 	for word in unique_words:
 		counter += 1
 		word_group[word] = counter;
-		data['nodes'].append({'name':word, 'group':counter, 'rad': change_scale(unique_words[word], 0, max_unique_words, 7, 10), 'type': 'grav', 'image_url':'http://s3-eu-west-1.amazonaws.com/petrus-blog/placeholder.png'})
+		data['nodes'].append({'name':word, 'group':counter, 'rad': change_scale(unique_words[word], 0, max_unique_words, 7, 10), 'type': 'grav', 'image_url':get_image_url_for_word(word,api_instagram)})
 		data['links'].append({'source': 0, 'target':counter, 'stroke': 2, 'length': 350, 'word':word, 'value': 'visible'})
 		node_counter += 1
 	
@@ -297,7 +315,7 @@ def generate_visualization(api):
 	# 			data['links'].append({'source': link2, 'target':link3, 'stroke': 2, 'length': 150, 'word':'', 'value': ''})
 	# # 			#data['links'].append({'source': link2, 'target':0, 'stroke': 2, 'length': 200, 'word':'', 'value': ''})
 
-	with open('json/'+username+'.json', 'wt') as out:
+	with open(username+'.json', 'wt') as out:
 		res = json.dump(data, out, sort_keys=True, indent=4, separators=(',', ': '))
 
 	return username
