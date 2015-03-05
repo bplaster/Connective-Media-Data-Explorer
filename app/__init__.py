@@ -15,8 +15,8 @@ import secret as secret
 # from beaker.middleware import SessionMiddleware
 from flask import Flask, send_file, redirect, request, session
 
-#URL = 'http://104.236.202.250/'
-URL = 'http://localhost:5000/'
+URL = 'http://104.236.202.250/'
+#URL = 'http://localhost:5000/'
 
 session_opts = {
     'session.type': 'ext:memcached',
@@ -43,9 +43,6 @@ auth_twitter.secure = True
 
 # Config Server
 app = Flask(__name__)  
-app.secret_key = secret.APP_SECRET_KEY
-
-
 
 # @app.before_request
 # def setup_request():
@@ -97,9 +94,11 @@ def get_nav():
 def on_twitter_callback(): 
     code = request.args.get("oauth_verifier")
     auth_twitter = tweepy.auth.OAuthHandler(CONFIG_TWITTER['consumer_id'], CONFIG_TWITTER['consumer_secret'])
-    token = session['request_token']
-    del session['request_token']
-    auth.set_request_token(token[0], token[1])
+    # token = session['request_token']
+    # del session['request_token']
+    # auth.set_request_token(token[0], token[1])
+    session['request_token']= (auth_twitter.request_token.key, auth_twitter.request_token.secret)
+
 
     if not code:
         return 'Missing code'
@@ -169,4 +168,5 @@ def on_recent():
 
 if __name__ == '__main__':
     # app.wsgi_app = SessionMiddleware(app.wsgi_app, session_opts)
+    app.secret_key = secret.APP_SECRET_KEY
     app.run(debug=True, host='localhost', port=8080)
