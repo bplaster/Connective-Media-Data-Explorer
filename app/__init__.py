@@ -42,7 +42,8 @@ auth_twitter = tweepy.auth.OAuthHandler(CONFIG_TWITTER['consumer_id'], CONFIG_TW
 auth_twitter.secure = True
 
 # Config Server
-app = Flask(__name__)  
+app = Flask(__name__) 
+app.secret_key = secret.APP_SECRET_KEY 
 
 # @app.before_request
 # def setup_request():
@@ -57,18 +58,9 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     try:
-        menu = ''
-        if not 'access_token_instagram' in session:     
-            url = auth_instagram.get_authorize_url(scope=["basic"])
-            menu += '<li><a href="%s">Login with Instagram</a></li>' % url 
-        if not 'access_token_twitter' in session:     
-            url = auth_twitter.get_authorization_url()
-            #session['request_token']= (auth_twitter.request_token.key, auth_twitter.request_token.secret)
-            menu += '<li><a href="%s">Login with Twitter</a></li>' % url
-        if menu == '':
-            return get_nav()
-        else:
-            return menu
+        url_instagram = auth_instagram.get_authorize_url(scope=["basic"])
+        menu = '<li><a href="%s">Login with Instagram</a></li>' % url_instagram 
+        return menu
     except Exception as e:
         print(e)
 
@@ -80,14 +72,18 @@ def get_nav():
             
     return nav_menu
 
-# def twitter_auth():
-#     url = ''
-#     try:
-#         url = auth_twitter.get_authorization_url()
-#         session['request_token']= (auth_twitter.request_token.key, auth_twitter.request_token.secret)
-#     except tweepy.TweepError:
-#         print 'Error! Failed to get request token.'
-#     return redirect(url)
+def get_twitter(): 
+    menu = "<a href='/twitter_login'>Login with Twitter</a>"
+    return menu
+
+@app.route('/twitter_login')
+def twitter_auth():
+    url = ''
+    try:
+        url = auth_twitter.get_authorization_url()
+    except tweepy.TweepError:
+        print 'Error! Failed to get request token.'
+    return redirect(url)
 
 
 @app.route('/oauth_twitter_callback')
@@ -98,8 +94,6 @@ def on_twitter_callback():
     # del session['request_token']
     # auth.set_request_token(token[0], token[1])
     session['request_token']= (auth_twitter.request_token.key, auth_twitter.request_token.secret)
-
-
     if not code:
         return 'Missing code'
     try:
@@ -111,7 +105,7 @@ def on_twitter_callback():
         print ("access token twitter =" + access_token)
     except Exception as e:
         print(e)
-    return home()
+    return get_nav()
 
 @app.route('/oauth_instagram_callback')
 def on_instagram_callback(): 
@@ -128,7 +122,7 @@ def on_instagram_callback():
     except Exception as e:
         print(e)
     #return get_nav()
-    return home()
+    return get_twitter()
 
 @app.route('/process_images')
 def on_recent(): 
@@ -168,5 +162,4 @@ def on_recent():
 
 if __name__ == '__main__':
     # app.wsgi_app = SessionMiddleware(app.wsgi_app, session_opts)
-    app.secret_key = secret.APP_SECRET_KEY
-    app.run(debug=True, host='localhost', port=8080)
+    app.run(debug=True, host='localhost', port=5000)
