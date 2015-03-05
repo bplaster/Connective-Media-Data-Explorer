@@ -1,9 +1,9 @@
 # from pylab import *
-import skimage
-from skimage import io, exposure
-import skimage.io._io as io
-from skimage.data import load
-from skimage.util import img_as_ubyte
+# import skimage
+# from skimage import io, exposure
+# import skimage.io._io as io
+# from skimage.data import load
+# from skimage.util import img_as_ubyte
 import urllib
 import urllib2
 import cStringIO
@@ -138,7 +138,7 @@ def on_recent():
                 photo = media.get_low_resolution_url()
                 # Process images
                 img = Image.open(cStringIO.StringIO(urllib.urlopen(photo).read()))
-                i = img_as_ubyte(img)  # To convert to uint8 data type
+                # i = img_as_ubyte(img)  # To convert to uint8 data type
 
                 # TODO: Check image
                 display_photo_html = []
@@ -347,4 +347,4 @@ def on_recent():
 if __name__ == '__main__':
     app.wsgi_app = SessionMiddleware(app.wsgi_app, session_opts)
     app.secret_key = secret.APP_SECRET_KEY
-    app.run(debug=True, host=104.236.202.250)
+    app.run(debug=True, host='104.236.202.250')
