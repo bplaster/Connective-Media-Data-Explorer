@@ -8,7 +8,7 @@ import urllib
 import urllib2
 import cStringIO
 
-from PIL import Image
+# from PIL import Image
 from instagram import client, subscriptions
 import tweepy
 import secret as secret
