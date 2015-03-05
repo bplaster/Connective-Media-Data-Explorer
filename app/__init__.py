@@ -7,6 +7,7 @@
 import urllib
 import urllib2
 import cStringIO
+import twitter2 as tw
 
 # from PIL import Image
 from instagram import client, subscriptions
@@ -21,7 +22,8 @@ session = dict()
 
 # Config Server
 app = Flask(__name__) 
-app.secret_key = secret.APP_SECRET_KEY 
+app.secret_key = secret.APP_SECRET_KEY
+
 
 # API keys
 CONFIG_INSTAGRAM = {
@@ -36,6 +38,7 @@ CONFIG_TWITTER = {
 }
 
 auth_instagram = client.InstagramAPI(**CONFIG_INSTAGRAM)
+auth_twitter = None
 
 @app.route('/')
 def home():
@@ -109,7 +112,11 @@ def on_instagram_callback():
     return get_twitter()
 
 @app.route('/process_images')
-def on_recent(): 
+def on_recent():
+    if not auth_twitter:
+        api = tweepy.API(auth_twitter)
+        tw.generate_visualization(api) 
+
     word = 'cat'
     content = "<h2>User Recent Media</h2>"
     access_token = session.get('access_token_instagram')
@@ -141,7 +148,7 @@ def on_recent():
         content += ''.join(display_photo_html)
     except Exception as e:
         print(e)              
-    return "%s %s <br/>Remaining API Calls = %s/%s" % (get_nav(),content, api.x_ratelimit_remaining,api.x_ratelimit)
+    return "%s %s <br/>Remaining Instagram API Calls = %s/%s" % (get_nav(),content, api.x_ratelimit_remaining,api.x_ratelimit)
 
 
 if __name__ == '__main__':

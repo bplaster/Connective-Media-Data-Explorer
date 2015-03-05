@@ -23,9 +23,9 @@ def get_all_tweets(screen_name, api, attempts=0):
 	try:
 		print screen_name
 		#authorize twitter, initialize tweepy
-		auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-		auth.set_access_token(access_key, access_secret)
-		api = tweepy.API(auth)
+		# auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+		# auth.set_access_token(access_key, access_secret)
+		# api = tweepy.API(auth)
 		
 		#initialize a list to hold all the tweepy Tweets
 		alltweets = []	
@@ -148,14 +148,14 @@ def paginate(iterable, page_size):
             break
         yield page
 
-if __name__ == '__main__':
-
-	ignore_users = ['golombekyspkx9']
+# if __name__ == '__main__':
+def generate_visualization(api):
+	ignore_users = []
 
 	#Set up the API with the required keys and tokens...
-	auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-	auth.set_access_token(access_key, access_secret)
-	api = tweepy.API(auth)
+	# auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+	# auth.set_access_token(access_key, access_secret)
+	# api = tweepy.API(auth)
 
 	#Get all users for which we already have tweets:
 	current_users = [] #get_current_users()
@@ -170,6 +170,7 @@ if __name__ == '__main__':
 		username = api.me().screen_name.replace("u'", "")
 		user_images[username] = api.me().profile_image_url.replace("u'", "")
 	except Exception, e:
+		print str(e)
 		if("limit" in str(e)):
 			print "waiting 7 minutes ..."
 			for i in range(7):
