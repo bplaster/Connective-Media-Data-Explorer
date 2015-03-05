@@ -15,8 +15,8 @@ import secret as secret
 # from beaker.middleware import SessionMiddleware
 from flask import Flask, send_file, redirect, request, session
 
-URL = 'http://104.236.202.250/'
-#URL = 'http://localhost:8080/'
+#URL = 'http://104.236.202.250/'
+URL = 'http://localhost:5000/'
 
 session_opts = {
     'session.type': 'ext:memcached',
@@ -63,11 +63,11 @@ def home():
         menu = ''
         if not 'access_token_instagram' in session:     
             url = auth_instagram.get_authorize_url(scope=["basic"])
-            menu += '<a href="%s">Login with Instagram</a>' % url
+            menu += '<li><a href="%s">Login with Instagram</a></li>' % url 
         if not 'access_token_twitter' in session:     
             url = auth_twitter.get_authorization_url()
-            session['request_token']= (auth_twitter.request_token.key, auth_twitter.request_token.secret)
-            menu += '<a href="%s">Login with Twitter</a>' % url
+            #session['request_token']= (auth_twitter.request_token.key, auth_twitter.request_token.secret)
+            menu += '<li><a href="%s">Login with Twitter</a></li>' % url
         if menu == '':
             return get_nav()
         else:
